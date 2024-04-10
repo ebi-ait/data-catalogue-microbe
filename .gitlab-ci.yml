@@ -14,7 +14,6 @@ k8s-deploy-catalogue:
   stage: deploy
   tags:
     - dind
-    - docker
   script:
     - set -vx
     - set | grep CI_
