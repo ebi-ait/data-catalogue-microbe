@@ -1,0 +1,33 @@
+image: docker:stable
+services:
+  - docker:stable-dind
+
+variables:
+  CATALOGUE_NAME: microbe
+  K8S_NAMESPACE: dc-${CATALOGUE_NAME}
+
+stages:
+  - deploy
+
+k8s-deploy-demo:
+  image: dtzar/helm-kubectl:3.11.0
+  stage: deploy
+  script:
+    - set | grep CI_
+    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+    - cp .secure_files/.dockerconfig.json ./k8s/overlays/demo/
+#    - apk update  && apk add --no-cache curl
+#    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+#    - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
+    - kubectl version
+    - mkdir -p $HOME/.kube
+    - cp .secure_files/config ~/.kube/config
+    - kubectl config view
+#    - curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+    - kubectl get namespace ${K8S_NAMESPACE} 2&>1 > /dev/null ||  kubectl create namespace ${K8S_NAMESPACE}
+    - kubectl apply -k k8s/overlays/${CATALOGUE_NAME} --namespace=${K8S_NAMESPACE}
+    - kubectl rollout restart deployments data-catalogue-${CATALOGUE_NAME} --namespace "$(yq '.namespace' k8s/overlays/${CATALOGUE_NAME}/kustomization.yaml)"
+    - kubectl wait --namespace ${K8S_NAMESPACE} --for=condition=ready pod --selector=app=data-catalogue-${CATALOGUE_NAME} --timeout=60s
+
+  when: manual
+
