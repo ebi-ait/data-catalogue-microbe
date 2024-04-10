@@ -15,13 +15,13 @@ k8s-deploy-catalogue:
   script:
     - set | grep CI_
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - cp .secure_files/.dockerconfig.json ./k8s/overlays/${CATALOGUE_NAME}/
+    - cp $DOCKER_CONFIG_JSON ./k8s/overlays/${CATALOGUE_NAME}/
 #    - apk update  && apk add --no-cache curl
 #    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 #    - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
     - kubectl version
     - mkdir -p $HOME/.kube
-    - cp .secure_files/config ~/.kube/config
+    - cp $KUBE_CONFIG ~/.kube/config
     - kubectl config view
 #    - curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
     - kubectl get namespace ${K8S_NAMESPACE} > /dev/null 2&>1 || kubectl create namespace ${K8S_NAMESPACE}
