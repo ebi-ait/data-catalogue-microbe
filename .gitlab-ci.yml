@@ -12,6 +12,9 @@ stages:
 k8s-deploy-catalogue:
   image: dtzar/helm-kubectl:3.11.0
   stage: deploy
+  tags:
+    - dind
+    - docker
   script:
     - set -vx
     - set | grep CI_
