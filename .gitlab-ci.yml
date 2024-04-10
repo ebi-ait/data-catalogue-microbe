@@ -9,13 +9,13 @@ variables:
 stages:
   - deploy
 
-k8s-deploy-demo:
+k8s-deploy-catalogue:
   image: dtzar/helm-kubectl:3.11.0
   stage: deploy
   script:
     - set | grep CI_
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - cp .secure_files/.dockerconfig.json ./k8s/overlays/demo/
+    - cp .secure_files/.dockerconfig.json ./k8s/overlays/${CATALOGUE_NAME}/
 #    - apk update  && apk add --no-cache curl
 #    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 #    - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
