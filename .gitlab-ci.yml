@@ -20,6 +20,7 @@ k8s-deploy-catalogue:
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
     - cp $DOCKER_CONFIG_JSON ./k8s/overlays/${CATALOGUE_NAME}/
     - kubectl version
+    - kubectx
     - mkdir -p $HOME/.kube
     - cp $KUBE_CONFIG ~/.kube/config
     - kubectl config view
