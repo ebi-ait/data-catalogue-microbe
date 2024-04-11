@@ -13,7 +13,7 @@ kubectl apply -k k8s/overlays/${CATALOGUE_NAME}
 kubectl rollout restart \
   deployments data-catalogue-${CATALOGUE_NAME} \
   --namespace "$(yq '.namespace' k8s/overlays/${CATALOGUE_NAME}/kustomization.yaml)"
-kubectl wait --namespace dc-${CATALOGUE_NAME} --for=condition=ready pod --selector=app=data-catalogue-${CATALOGUE_NAME} --timeout=60s
+kubectl wait --namespace dc-${CATALOGUE_NAME} --for=condition=available deployment --selector=app=data-catalogue-${CATALOGUE_NAME} --timeout=60s
 
 curl https://wwwdev.ebi.ac.uk/catalogue/${CATALOGUE_NAME}/config.js
 

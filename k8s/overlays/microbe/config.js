@@ -1,8 +1,8 @@
 window.appConfig = {
     "ENVIRONMENT": "microbe",
     "basename": "/catalogue/microbe",
-    "REST_ENDPOINT_URL": '/biosamples/samples?filter=attr%3Aproject+name%3AMICROBE&filter=attr%3Acenter&filter=attr%3Apreservation%20temperature&filter=attr%3Atest%3Ayes&size=200',
-    "SCHEMA_ENDPOINT_URL": '/biosamples/schemas/core/sample.json',
+    "REST_ENDPOINT_URL": '/catalogue/microbe/biosamples/samples?filter=attr%3Aproject+name%3AMICROBE&filter=attr%3Acenter&page=0&size=200',
+    "SCHEMA_ENDPOINT_URL": '/catalogue/microbe/biosamples/schemas/core/sample.json',
     "RESOURCE_JSON_PATH": '_embedded.samples',
     "GRID_CONFIG": [
         {
