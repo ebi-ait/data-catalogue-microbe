@@ -1,7 +1,7 @@
 window.appConfig = {
     "ENVIRONMENT": "microbe",
     "basename": "/catalogue/microbe",
-    "REST_ENDPOINT_URL": '/biosamples/samples?filter=attr%3Aproject+name%3AMICROBE&filter=attr%3Acenter&filter=attr%3Apreservation%20temperature&filter=attr%3Atest%3Ayes&size=200',
+    "REST_ENDPOINT_URL": '/biosamples/samples?filter=attr%3Aproject+name%3AMICROBE&filter=attr%3Acenter&size=200',
     "SCHEMA_ENDPOINT_URL": '/biosamples/schemas/core/sample.json',
     "RESOURCE_JSON_PATH": '_embedded.samples',
     "GRID_CONFIG": [
@@ -34,7 +34,8 @@ window.appConfig = {
         {
             "name": "freezingMethod",
             valueGetter: params => params.data.characteristics?.["freezing method"]?.[0]?.text
-        },        {
+        },
+        {
             "name": "cultivation",
             valueGetter: params => params.data.characteristics?.cultivation?.[0]?.text
         },
@@ -71,22 +72,18 @@ window.appConfig = {
             valueGetter: params => params.data.characteristics?.["geographic location (country and/or sea)"]?.[0].text
         },
         {
-            "name": "pH",
-            valueGetter: params => params.data.characteristics?.pH?.[0].text
-        },
-        {
-            "name": "publication",
-            "valueGetter": params => params.data?.publications?.[0]?.pubmed_id
-        },
-        {
             "name": "project name",
             "valueGetter": params => params.data.characteristics?.["project name"]?.[0]?.text
+        },
+        {
+            "name": "local environmental context",
+            "valueGetter": params => params.data.characteristics?.["local environmental context"]?.[0]?.text
         }
     ],
 
     FILTER_FIELDS: [
         {
-            field: "soilType",
+            field: "center",
             type: "checkbox",
             data_type: "string"
         },
@@ -96,24 +93,22 @@ window.appConfig = {
             data_type: "string"
         },
         {
-            field: "cultivation",
-            type: "checkbox",
-            data_type: "string"
-        },
-        ,
-        //time point
-        {
-            field: "timepoint",
-            type: "checkbox",
-            data_type: "string"
-        },
-       {
-            field: "cryoprotectant",
+            field: "preservationTemperature",
             type: "checkbox",
             data_type: "string"
         },
         {
             field: "freezingMethod",
+            type: "checkbox",
+            data_type: "string"
+        },
+        {
+            field: "cryoprotectant",
+            type: "checkbox",
+            data_type: "string"
+        },
+        {
+            field: "timepoint",
             type: "checkbox",
             data_type: "string"
         }
