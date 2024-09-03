@@ -2,9 +2,10 @@ import {defineConfig, loadEnv, ConfigEnv} from 'vite';
 import react from '@vitejs/plugin-react';
 
 function getEnvVariable(config: ConfigEnv, envKey: string) {
+    debugger;
     const env = loadEnv(config.mode, process.cwd(), '')
     const envValue = env[envKey];
-    if (!envValue) {
+    if (config.command == 'serve' && !envValue) {
         throw new Error(`${envKey} is not defined. Check your .env file`);
     }
     console.log(`using ${envKey}: ${envValue}`)
