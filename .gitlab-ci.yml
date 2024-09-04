@@ -25,6 +25,7 @@ build:
 publish:
   stage: publish
   script:
+    - set | grep CI_REGISTRY
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker push "$DOCKER_IMAGE_NAME"
     - |
