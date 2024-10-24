@@ -20,9 +20,9 @@ stages:
   - deploy
 
 build_docker_image:
-  image: docker
+  image: docker:latest
   services:
-    - docker:27-dind
+    - docker:dind
   stage: build
   script:
     - docker --version
