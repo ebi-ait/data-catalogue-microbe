@@ -26,7 +26,7 @@ build_docker_image:
   stage: build
   script:
     - docker --version
-    - echo "$CI_DEPLOY_PASSWORD" | docker login -u "$CI_DEPLOY_USER" --password-stdin "$CI_REGISTRY"
+    - echo "$CI_DEPLOY_PASSWORD" | docker login --username "$CI_DEPLOY_USER" --password-stdin "$CI_REGISTRY"
     - echo $DOCKER_IMAGE_NAME
     - docker build -t $DOCKER_IMAGE_NAME .
     - docker push --quiet $DOCKER_IMAGE_NAME
