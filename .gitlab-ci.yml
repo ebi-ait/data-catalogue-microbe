@@ -1,35 +1,61 @@
-image: docker:stable
-services:
-  - docker:stable-dind
-
 variables:
-  CATALOGUE_NAME: microbe
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
   DOCKER_TAG: $CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA
   DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:$DOCKER_TAG
+  DOCKER_PULL_SECRET: docker-registry-secret
+  K8S_NAMESPACE_PREFIX: microbe
+  # take from variable or read from kubectl
+  K8S_CLUSTER_URL: http://hx-rke-wp-webadmin-17-worker-1.caas.ebi.ac.uk
+  APP_NAME: $CI_PROJECT_NAME
 
-workflow:
-  rules:
-    - when: always
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - dist/
 
 stages:
   - build
-  - publish
+  - deploy
 
-build:
+build_docker_image:
+  image: docker:latest
+  services:
+    - docker:dind
   stage: build
-  tags:
-    - dind
   script:
-    - docker build --pull -t "$DOCKER_IMAGE_NAME" .
+    - docker --version
+    - docker login -u "$CI_DEPLOY_USER" -p "$CI_DEPLOY_PASSWORD" "$CI_REGISTRY"
+    - echo $DOCKER_IMAGE_NAME
+    - docker build -t $DOCKER_IMAGE_NAME .
+    - docker push --quiet $DOCKER_IMAGE_NAME
+  after_script:
+    - docker logout ${CI_REGISTRY}
 
-# The CI_* variables are defined in gitlab and used to login to the container repo
-publish:
-  stage: publish
+deploy_int:
+  variables:
+    ENVIRONMENT_NAME: int
+    HOST: wwwint.ebi.ac.uk
+  environment:
+    name: int
+    url: https://wwwint.ebi.ac.uk/biosamples/checklist-editor
+  only:
+    - main
+  extends: .kube_deploy_script
+
+.kube_deploy_script:
+  stage: deploy
+  image: dtzar/helm-kubectl
+  services:
+    - docker:dind
+  variables:
+    K8S_NAMESPACE: ${K8S_NAMESPACE_PREFIX}-${ENVIRONMENT_NAME}
   script:
-    - echo "$CI_BUILD_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-    - docker push "$DOCKER_IMAGE_NAME"
-    - |
-      if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
-        docker tag "$DOCKER_IMAGE_NAME" "$CI_REGISTRY_IMAGE:latest"
-        docker push "$CI_REGISTRY_IMAGE:latest"
-      fi
+    - kubectl create namespace ${K8S_NAMESPACE} || true
+    - kubectl config set-context --current --namespace=${K8S_NAMESPACE}
+    - kubectl delete secret $DOCKER_PULL_SECRET || true
+    - kubectl create secret docker-registry $DOCKER_PULL_SECRET --docker-server=$CI_REGISTRY --docker-username=$CI_DEPLOY_USER --docker-password=$CI_DEPLOY_PASSWORD
+    - helm upgrade --install $APP_NAME ./chart --set image.repository=$CI_REGISTRY_IMAGE --set image.tag=$DOCKER_TAG --set "imagePullSecrets[0].name=$DOCKER_PULL_SECRET"
+    - kubectl rollout restart deployment ${APP_NAME}
+
