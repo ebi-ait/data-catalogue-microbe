@@ -20,7 +20,7 @@ stages:
   - deploy
 
 build_docker_image:
-  image: docker:27
+  image: docker
   services:
     - docker:27-dind
   stage: build
