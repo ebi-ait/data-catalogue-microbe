@@ -9,12 +9,6 @@ variables:
   K8S_CLUSTER_URL: http://hx-rke-wp-webadmin-17-worker-1.caas.ebi.ac.uk
   APP_NAME: $CI_PROJECT_NAME
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-    - dist/
-
 stages:
   - build
   - deploy
@@ -26,8 +20,6 @@ build_docker_image:
   stage: build
   script:
     - docker --version
-    - set | grep CI_D
-    - echo "CI_DEPLOY_USER $CI_DEPLOY_USER"
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - echo $DOCKER_IMAGE_NAME
     - docker build -t $DOCKER_IMAGE_NAME .
