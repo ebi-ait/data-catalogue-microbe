@@ -2,7 +2,6 @@ import {defineConfig, loadEnv, ConfigEnv} from 'vite';
 import react from '@vitejs/plugin-react';
 
 function getEnvVariable(config: ConfigEnv, envKey: string) {
-    debugger;
     const env = loadEnv(config.mode, process.cwd(), '')
     const envValue = env[envKey];
     if (config.command == 'serve' && !envValue) {
@@ -39,6 +38,8 @@ export default defineConfig((config) => {
 
                 },
             },
+            // TODO: does this mean that the build time needs to know the deployment path?
+            base: '/microbe'
         }
     }
 );
