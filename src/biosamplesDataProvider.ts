@@ -1,7 +1,8 @@
 import {stringify} from 'query-string';
 import {DataProvider, fetchUtils} from 'react-admin';
 
-const apiUrl = '/api/biosamples/samples';
+// TODO: read /microbe from config.js
+const apiUrl = '/microbe/api/biosamples/samples';
 const httpClient = fetchUtils.fetchJson;
 
 const biosamplesDataProvider: DataProvider = {
