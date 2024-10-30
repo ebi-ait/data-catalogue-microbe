@@ -26,13 +26,12 @@ build_docker_image:
   after_script:
     - docker logout ${CI_REGISTRY}
 
-deploy_int:
+deploy_dev:
   variables:
-    ENVIRONMENT_NAME: int
-    HOST: wwwint.ebi.ac.uk
+    ENVIRONMENT_NAME: dev
   environment:
-    name: int
-    url: https://wwwint.ebi.ac.uk/biosamples/checklist-editor
+    name: dev
+    url: https://wwwint.ebi.ac.uk/microbe
   only:
     - main
   extends: .kube_deploy_script
@@ -48,8 +47,8 @@ deploy_int:
     - kubectl create namespace ${K8S_NAMESPACE} || true
     - kubectl config set-context --current --namespace=${K8S_NAMESPACE}
     - kubectl delete secret $DOCKER_PULL_SECRET || true
-    - echo kubectl create secret docker-registry $DOCKER_PULL_SECRET --docker-server=$CI_REGISTRY --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD
     - kubectl create secret docker-registry $DOCKER_PULL_SECRET --docker-server=$CI_REGISTRY --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD
-    - helm upgrade --install $APP_NAME ./chart --set image.repository=$CI_REGISTRY_IMAGE --set image.tag=$DOCKER_TAG --set "imagePullSecrets[0].name=$DOCKER_PULL_SECRET"
+    - helm upgrade --install $APP_NAME ./chart --values ./chart/values-${ENVIRONMENT_NAME}.yaml --set image.repository=$CI_REGISTRY_IMAGE --set image.tag=$DOCKER_TAG --set "imagePullSecrets[0].name=$DOCKER_PULL_SECRET"
     - kubectl rollout restart deployment ${APP_NAME}
+    - kubectl rollout status deployment ${APP_NAME} --timeout=90s
 
