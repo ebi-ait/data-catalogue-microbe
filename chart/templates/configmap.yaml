@@ -15,7 +15,7 @@ data:
 
       # redirect /api requests to the json-schema-store
       location {{.Values.baseUrl}}{{.Values.apiPrefix}} {
-          rewrite ^{{.Values.apiPrefix}}/(.*)$ /$1 break;
+          rewrite ^{{.Values.baseUrl}}{{.Values.apiPrefix}}/(.*)$ /$1 break;
           proxy_pass "{{ .Values.biosamplesUrl}}";
       }
 
