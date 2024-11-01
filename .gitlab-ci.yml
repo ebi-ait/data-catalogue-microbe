@@ -14,10 +14,11 @@ stages:
   - deploy
 
 build_docker_image:
+  stage: build
   image: docker:27
+  tags: ["dind"]
   services:
     - docker:27-dind
-  stage: build
   script:
     - docker --version
     - echo "$CI_REGISTRY_PASSWORD" | docker login --username "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
@@ -38,9 +39,10 @@ deploy_dev:
 
 .kube_deploy_script:
   stage: deploy
-  image: dtzar/helm-kubectl
+  image: dtzar/helm-kubectl:3.16
+  tags: ["dind"]
   services:
-    - docker:dind
+    - docker:27-dind
   variables:
     K8S_NAMESPACE: ${K8S_NAMESPACE_PREFIX}-${ENVIRONMENT_NAME}
   script:
