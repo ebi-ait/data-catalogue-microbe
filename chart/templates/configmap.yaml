@@ -13,9 +13,9 @@ data:
       access_log /var/log/nginx/access.log main;
       error_log /var/log/nginx/access.log debug;
 
-      # redirect /api requests to the json-schema-store
-      location {{.Values.baseUrl}}{{.Values.apiPrefix}} {
-          rewrite ^{{.Values.baseUrl}}{{.Values.apiPrefix}}/biosamples/(.*)$ /$1 break;
+      # redirect /api requests to the biosamples
+      location {{.Values.baseUrl}}{{.Values.apiPrefix}}/biosamples {
+          rewrite ^{{.Values.baseUrl}}{{.Values.apiPrefix}}/(.*)$ /$1 break;
           proxy_pass "{{ .Values.biosamplesUrl}}";
       }
 
