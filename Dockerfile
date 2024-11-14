@@ -4,7 +4,7 @@ LABEL authors="amnon"
 
 WORKDIR /app
 
-COPY ./package.json ./package-lock.json ./
+COPY ./package*.json ./
 
 RUN npm install
 
@@ -12,7 +12,7 @@ COPY . .
 
 RUN npm run build
 
-# Step 2: Run image
+
 FROM nginx:1.25.4-alpine-slim
 
 COPY --from=builder /app/dist /usr/share/nginx/html
