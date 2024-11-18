@@ -7,29 +7,30 @@ const httpClient = fetchUtils.fetchJson;
 
 const biosamplesFacetsDataProvider: DataProvider = {
     getList: (resource, params) => {
-        const {page, perPage} = params.pagination;
-        const {field, order} = params.sort;
         const query = {
             filter: 'attr:project+name:MICROBE',
             ...params.filter,
-            page,
-            size: perPage
         };
         const url = `${apiUrl}?${stringify(query, {encode:false})}`;
-        return httpClient(url).then(({headers, json}) => ({
-            data: json._embedded[resource]
-                .map((record: any) => {
-                    return {...record,
-                        id: record.accession,
-                    };
-                }),
-            pageInfo: {
-                hasNextPage: Boolean(json._links.next),
-                hasPreviousPage: Boolean(json._links.previous)
-            },
-            total: json.page.totalElements
+        return httpClient(url).then(({headers, json}) => {
+            var attributes = json._embedded[resource]
+                .filter(facet => facet.type == 'attribute');
+            return ({
+                data: attributes
+                    .map((record: any) => {
+                        return {
+                            ...record,
+                            id: record.label,
+                        };
+                    }),
+                pageInfo: {
+                    hasNextPage: false,
+                    hasPreviousPage: false
+                },
+                total: attributes.length
 
-        }));
+            });
+        });
     },
     getOne: (resource, params) =>
         httpClient(`${apiUrl}/${params.id}`).then(({json}) => ({
