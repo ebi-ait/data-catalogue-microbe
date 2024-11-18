@@ -37,14 +37,7 @@ export const SampleFilterSidebar = (props) => {
         <Card>
             <CardContent>
                 <DynamicFilterList source={'organism'}/>
-                <DynamicFilterList source={'center'}
-                                   values={[
-                                       'AIT',
-                                       'CABI',
-                                       'HMGU',
-                                       'INRAE',
-                                       'Station Biologique de Roscoff'
-                                   ]}/>
+                <DynamicFilterList source={'center'}/>
                 <DynamicFilterList source={'freezing method'}
                                    values={[
                                        'Controlled Rate Freezer',

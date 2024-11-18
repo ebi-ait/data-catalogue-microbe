@@ -13,7 +13,7 @@ const biosamplesDataProvider: DataProvider = {
         const {filter} = params;
 
         const query = {
-            filter: ['attr:project+name:MICROBE'],
+            filter: ['attr:project+name:MICROBE','attr%3Acenter'],
             page,
             size: perPage
         };

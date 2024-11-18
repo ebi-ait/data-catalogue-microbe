@@ -7,10 +7,15 @@ const httpClient = fetchUtils.fetchJson;
 
 const biosamplesFacetsDataProvider: DataProvider = {
     getList: (resource, params) => {
+        const {filter} = params;
         const query = {
-            filter: 'attr:project+name:MICROBE',
-            ...params.filter,
+            filter: ['attr:project+name:MICROBE', 'attr%3Acenter'],
         };
+        if(filter) {
+            Object.entries(params.filter)
+                .map(a=>`${a[0]}:${a[1]}`)
+                .forEach(s=> query.filter.push(s));
+        }
         const url = `${apiUrl}?${stringify(query, {encode:false})}`;
         return httpClient(url).then(({headers, json}) => {
             var attributes = json._embedded[resource]
