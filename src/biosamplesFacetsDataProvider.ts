@@ -21,13 +21,13 @@ const biosamplesFacetsDataProvider: DataProvider = {
                 .map((record: any) => {
                     return {...record,
                         id: record.accession,
-                        // ...Object.entries(record.characteristics).map(x=>x[1][0].text)
                     };
                 }),
             pageInfo: {
                 hasNextPage: Boolean(json._links.next),
-                hasPreviousPage: Boolean(json._links.next)
-            }
+                hasPreviousPage: Boolean(json._links.previous)
+            },
+            total: json.page.totalElements
 
         }));
     },

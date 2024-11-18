@@ -33,8 +33,9 @@ const biosamplesDataProvider: DataProvider = {
                 }),
             pageInfo: {
                 hasNextPage: Boolean(json._links.next),
-                hasPreviousPage: Boolean(json._links.next)
-            }
+                hasPreviousPage: Boolean(json._links.previous)
+            },
+            total: json.page.totalElements
 
         }));
     },
