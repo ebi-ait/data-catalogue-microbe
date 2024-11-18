@@ -5,7 +5,9 @@ function getEnvVariable(config: ConfigEnv, envKey: string) {
     const env = loadEnv(config.mode, process.cwd(), '')
     const envValue = env[envKey];
     if (config.command == 'serve' && !envValue) {
-        throw new Error(`${envKey} is not defined. Check your .env file`);
+        let message = `${envKey} is not defined. Check your .env file`;
+        console.error(message);
+        throw new Error(message);
     }
     console.log(`using ${envKey}: ${envValue}`)
     return envValue;
@@ -25,14 +27,20 @@ export default defineConfig((config) => {
                 open: true,  // Automatically open the app in the browser
                 proxy: {
                     // Proxy requests to the API server
-                    '/api': {
+                    '/microbe/api': {
                         target: biosamplesRoot,
                         changeOrigin: true,
                         secure: false,
-                        rewrite: (path:string) => path.replace(/^\/api/, ''),
+                        rewrite: (path:string) => path.replace(/\/microbe\/api/, ''),
                         configure: (proxy, options) => {
-                            proxy.on('proxyReq', (proxyReq, req, res) => {
-                                console.log(`Proxying request to: ${req.url}`);
+                            proxy.on('proxyReq', (proxyReq, req) => {
+                                console.log(`Proxying request to: ${proxyReq.getHeader('host')}${proxyReq.path}`);
+                                console.log(`Original URL: ${req.url}`);
+                                debugger;
+                                if (!proxyReq.getHeader('Content-Type')) {
+                                    proxyReq.setHeader('Content-Type', 'application/json'); // Set default Content-Type
+                                }
+                                console.log(`Proxying request with Content-Type: ${proxyReq.getHeader('Content-Type')}`);
                             });
                         },},
 
