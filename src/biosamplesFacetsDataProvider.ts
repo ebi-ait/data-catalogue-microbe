@@ -1,27 +1,20 @@
 import {stringify} from 'query-string';
 import {DataProvider, fetchUtils} from 'react-admin';
-import {notImplemented} from "./delegatingDataProvider";
 
 // TODO: read /microbe from config.js
-const apiUrl = '/microbe/api/biosamples/samples';
+const apiUrl = '/microbe/api/biosamples/samples/facets';
 const httpClient = fetchUtils.fetchJson;
 
-const biosamplesDataProvider: DataProvider = {
+const biosamplesFacetsDataProvider: DataProvider = {
     getList: (resource, params) => {
         const {page, perPage} = params.pagination;
         const {field, order} = params.sort;
-        const {filter} = params;
-
         const query = {
-            filter: ['attr:project+name:MICROBE'],
+            filter: 'attr:project+name:MICROBE',
+            ...params.filter,
             page,
             size: perPage
         };
-        if(filter) {
-            Object.entries(params.filter)
-                .map(a=>`${a[0]}:${a[1]}`)
-                .forEach(s=> query.filter.push(s));
-        }
         const url = `${apiUrl}?${stringify(query, {encode:false})}`;
         return httpClient(url).then(({headers, json}) => ({
             data: json._embedded[resource]
@@ -66,11 +59,11 @@ const biosamplesDataProvider: DataProvider = {
             total: parseInt(headers.get('content-range')?.split('/').pop() || '0', 10),
         }));
     },
-    update: notImplemented,
-    updateMany: notImplemented,
-    create: notImplemented,
-    delete: notImplemented,
-    deleteMany: notImplemented,
+    update: () => Promise.reject(new Error('Samples are read-only')),
+    updateMany: () => Promise.reject(new Error('Samples are read-only')),
+    create: () => Promise.reject(new Error('Samples are read-only')),
+    delete: () => Promise.reject(new Error('Samples are read-only')),
+    deleteMany: () => Promise.reject(new Error('Samples are read-only')),
 };
 
-export default biosamplesDataProvider;
+export default biosamplesFacetsDataProvider;
