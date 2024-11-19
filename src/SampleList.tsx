@@ -38,18 +38,10 @@ export const SampleFilterSidebar = (props) => {
             <CardContent>
                 <DynamicFilterList source={'organism'}/>
                 <DynamicFilterList source={'center'}/>
-                <DynamicFilterList source={'freezing method'}
-                                   values={[
-                                       'Controlled Rate Freezer',
-                                       'Encapsulation',
-                                       'Liquid nitrogen',
-                                       'MrFrosty',
-                                       'Progressive freezer',
-                                       'Ultra Low Temperature Freezer',
-                                       'none',
-                                       'not provided'
-                                   ]}/>
-
+                {/* TODO: freezing is hard coded becuase it is not available in the
+                          facets resource
+                */}
+                <DynamicFilterList source={'freezing method'}/>
             </CardContent>
         </Card>
     )

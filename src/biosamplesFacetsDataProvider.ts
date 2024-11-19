@@ -1,5 +1,6 @@
 import {stringify} from 'query-string';
 import {DataProvider, fetchUtils} from 'react-admin';
+import {defaultFilter} from "./constants";
 
 // TODO: read /microbe from config.js
 const apiUrl = '/microbe/api/biosamples/samples/facets';
@@ -9,12 +10,12 @@ const biosamplesFacetsDataProvider: DataProvider = {
     getList: (resource, params) => {
         const {filter} = params;
         const query = {
-            filter: ['attr:project+name:MICROBE', 'attr%3Acenter'],
+            filter: defaultFilter,
         };
         if(filter) {
-            Object.entries(params.filter)
-                .map(a=>`${a[0]}:${a[1]}`)
-                .forEach(s=> query.filter.push(s));
+            Object.entries(filter)
+                .map(([attr,value])=>`${attr}:${value}`)
+                .forEach(query.filter.push);
         }
         const url = `${apiUrl}?${stringify(query, {encode:false})}`;
         return httpClient(url).then(({headers, json}) => {
@@ -37,39 +38,14 @@ const biosamplesFacetsDataProvider: DataProvider = {
             });
         });
     },
-    getOne: (resource, params) =>
-        httpClient(`${apiUrl}/${params.id}`).then(({json}) => ({
-            data: json,
-        })),
-    getMany: (resource, params) => {
-        const query = {
-            filter: JSON.stringify({id: params.ids}),
-        };
-        const url = `${apiUrl}?${stringify(query)}`;
-        return httpClient(url).then(({json}) => ({data: json}));
-    },
-    getManyReference: (resource, params) => {
-        const {page, perPage} = params.pagination;
-        const {field, order} = params.sort;
-        const query = {
-            sort: JSON.stringify([field, order]),
-            range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
-            filter: JSON.stringify({
-                ...params.filter,
-                [params.target]: params.id,
-            }),
-        };
-        const url = `${apiUrl}?${stringify(query)}`;
-        return httpClient(url).then(({headers, json}) => ({
-            data: json,
-            total: parseInt(headers.get('content-range')?.split('/').pop() || '0', 10),
-        }));
-    },
-    update: () => Promise.reject(new Error('Samples are read-only')),
-    updateMany: () => Promise.reject(new Error('Samples are read-only')),
-    create: () => Promise.reject(new Error('Samples are read-only')),
-    delete: () => Promise.reject(new Error('Samples are read-only')),
-    deleteMany: () => Promise.reject(new Error('Samples are read-only')),
+    getOne: ()=>Promise.reject(new Error('getOne is not implemented')),
+    getMany: ()=>Promise.reject(new Error('getMany is not implemented')),
+    getManyReference: ()=>Promise.reject(new Error('getManyReference is not implemented')),
+    update: () => Promise.reject(new Error('facets are read-only')),
+    updateMany: () => Promise.reject(new Error('facets are read-only')),
+    create: () => Promise.reject(new Error('facets are read-only')),
+    delete: () => Promise.reject(new Error('factes are read-only')),
+    deleteMany: () => Promise.reject(new Error('facets are read-only')),
 };
 
 export default biosamplesFacetsDataProvider;

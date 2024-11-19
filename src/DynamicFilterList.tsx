@@ -1,52 +1,54 @@
-import React, {useEffect, useState} from "react";
-import {FilterList, FilterListItem, useDataProvider} from "react-admin";
+import {Empty} from "ra-ui-materialui/src/list/Empty";
+import React from "react";
+import {FilterList, FilterListItem, Loading, useGetList} from "react-admin";
 
-export const DynamicFilterList = (props: { source: string }) => {
-    const {source,values} = props;
-    const [facetValues, setFacetValues] = useState<string[]>([]);
+interface DynamicFilterListProps {
+    source: string;
+    label?: string; // Optional
+    values?: string[]; // Optional
+}
+interface Facet {
+    label: string;
+    type: string;
+    count: number;
+    content: { label: string, count: number }[];
+}
 
-    const dataProvider = useDataProvider();
-    useEffect(() => {
-        const fetchFacetValues = async () => {
-            let data;
-            if(values) {
-                setFacetValues(values);
-            } else {
-                try {
-                    let {data} = await dataProvider.getList('facets',{})
-                    data = data.filter(facet=>facet.label==source)
-                        .flatMap(facet=>facet.content)
-                        .map(facet=>facet.label);
-                    setFacetValues(data);
-                } catch (error) {
-                    console.error(`Error fetching column values for column ${source} of facets: ${error.message}`);
-                    throw error;
-                }
-            }
-        };
+const useFacetValues = (source: string, values?: string[]) => {
+    if (values) return { facetValues: values, isPending: false, error: null };
 
-        fetchFacetValues();
-    }, [
-        dataProvider,
-        source
-    ]);
-    let {label} = props;
-    if (!label) {
-        label = source;
+    const { data, isPending, error } = useGetList<Facet>('facets', {});
+    if (data) {
+        const facetValues = data
+            .filter(facet => facet.label === source)
+            .flatMap(facet => facet.content)
+            .map(content => content.label);
+        return { facetValues, isPending, error };
     }
-    return <FilterList source={source} label={label}>
-        {
-            facetValues.map(
-                value => {
-                    var filterItemValue = Object.fromEntries([
-                        ['attr:' + source, value]]);
-                    return (
-                        <FilterListItem label={value}
-                                        key={value}
-                                        value={filterItemValue}/>);
-                }
-            )
-        }
+    return { facetValues: [], isPending, error };
+};
+
+export const DynamicFilterList = ({source,label,values}: DynamicFilterListProps) => {
+    const { facetValues, isPending, error } = useFacetValues(source, values);
+
+    if (isPending) {
+        return <Loading loadingPrimary={`Loading ${source}`}/>;
+    }
+    if (error) {
+        console.error(`Error fetching column values for column ${source} of facets: ${error.message}`);
+        return <p>Could not load filter values for {source}</p>;
+    }
+    return <FilterList source={source} label={label || source}>
+        {facetValues.map(value => {
+            const filterItemValue = { [`attr:${source}`]: value };
+            return (
+                <FilterListItem
+                    key={value}
+                    label={value}
+                    value={filterItemValue}
+                />
+            );
+        })}
     </FilterList>;
 };
 

@@ -1,5 +1,6 @@
 import {stringify} from 'query-string';
 import {DataProvider, fetchUtils} from 'react-admin';
+import {defaultFilter} from "./constants";
 import {notImplemented} from "./delegatingDataProvider";
 
 // TODO: read /microbe from config.js
@@ -13,14 +14,14 @@ const biosamplesDataProvider: DataProvider = {
         const {filter} = params;
 
         const query = {
-            filter: ['attr:project+name:MICROBE','attr%3Acenter'],
+            filter: defaultFilter,
             page,
             size: perPage
         };
         if(filter) {
             Object.entries(params.filter)
-                .map(a=>`${a[0]}:${a[1]}`)
-                .forEach(s=> query.filter.push(s));
+                .map(([attr,value])=>`${attr}:${value}`)
+                .forEach(query.filter.push);
         }
         const url = `${apiUrl}?${stringify(query, {encode:false})}`;
         return httpClient(url).then(({headers, json}) => ({
