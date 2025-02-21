@@ -3,12 +3,10 @@ import biosamplesFacetsDataProvider from "./biosamplesFacetsDataProvider";
 
 const delegatingDataProvider = (resource) => {
     switch (resource) {
-        case 'samples':
-            return biosamplesDataProvider;
         case 'facets':
             return biosamplesFacetsDataProvider;
         default:
-            throw new Error(`No data provider found for resource: ${resource}`);
+            return biosamplesDataProvider;
     }
 };
 export const customDataProvider = new Proxy({}, {
