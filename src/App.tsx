@@ -17,7 +17,9 @@ const App: React.FC = () => {
 
         <Admin dataProvider={customDataProvider}
                queryClient={queryClient}>
-            <Resource name="samples" list={SampleList}/>
+            <Resource name="Soil samples" list={SampleList}/>
+            <Resource name="Seed samples" list={SampleList}/>
+            <Resource name="Marine samples" list={SampleList}/>
         </Admin>
     );
 };
