@@ -1,31 +1,44 @@
 import {stringify} from 'query-string';
 import {DataProvider, fetchUtils} from 'react-admin';
-import {defaultFilter} from "./constants";
+import {defaultFilter, soilFilter, waterFilter, seedFilter} from "./constants";
 import {notImplemented} from "./delegatingDataProvider";
 
 // TODO: read /microbe from config.js
 const apiUrl = '/microbe/api/biosamples/samples';
 const httpClient = fetchUtils.fetchJson;
 
-const biosamplesDataProvider: DataProvider = {
+const biosamplesDataProvider : DataProvider = {
     getList: (resource, params) => {
         const {page, perPage} = params.pagination;
         const {field, order} = params.sort;
         const {filter} = params;
-
+        var data_filter = defaultFilter;
+        switch (resource) {
+        case "Soil samples":
+            data_filter = soilFilter;
+            break;
+        case 'Marine samples':
+            data_filter = waterFilter;
+            break;
+        case 'Seed samples':
+            data_filter = seedFilter;
+            break;
+        default:
+            data_filter = defaultFilter;
+    }
         const query = {
-            filter: defaultFilter,
+            filter: data_filter,
             page,
             size: perPage
         };
         if(filter) {
-            Object.entries(params.filter)
+            const extra_filters = Object.entries(params.filter)
                 .map(([attr,value])=>`${attr}:${value}`)
-                .forEach(query.filter.push);
+            query.filter = query.filter.concat(extra_filters);
         }
         const url = `${apiUrl}?${stringify(query, {encode:false})}`;
         return httpClient(url).then(({headers, json}) => ({
-            data: json._embedded[resource]
+            data: json._embedded['samples']
                 .map((record: any) => {
                     return {...record,
                         id: record.accession,
