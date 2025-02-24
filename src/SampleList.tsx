@@ -41,7 +41,28 @@ export const SampleFilterSidebar = (props) => {
                 {/* TODO: freezing is hard coded becuase it is not available in the
                           facets resource
                 */}
-                <DynamicFilterList source={'freezing method'}/>
+                <DynamicFilterList source={'freezing method'}
+                                   values={[
+                                       'Controlled Rate Freezer',
+                                       'Encapsulation',
+                                       'Liquid nitrogen',
+                                       'MrFrosty',
+                                       'Progressive freezer',
+                                       'Ultra Low Temperature Freezer',
+                                       'none',
+                                       'not provided'
+                                   ]}/>
+                <DynamicFilterList source={'targets'}
+                                   values={['-195.0',
+                                       '16S bact',
+                                       '16S bacteria',
+                                       '16S bact, 16S Archaea, IST',
+                                       'IST'
+                                   ]}
+                />
+                <DynamicFilterList source={'checklist'}
+                                   values={['ERC000020','ERC000024']}
+                />
             </CardContent>
         </Card>
     )
@@ -59,6 +80,7 @@ export const SampleList: React.FC = (props) => (
             <CharacteristicField source="freezing method"/>
             <CharacteristicField source="preservation temperature"/>
             <CharacteristicField source="targets"/>
+            <CharacteristicField source="checklist"/>
             <TextField source="accession"/>
         </Datagrid>
     </List>

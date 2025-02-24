@@ -21,7 +21,7 @@ const biosamplesDataProvider: DataProvider = {
         if(filter) {
             Object.entries(params.filter)
                 .map(([attr,value])=>`${attr}:${value}`)
-                .forEach(query.filter.push);
+                .forEach(s=> query.filter.push(s));
         }
         const url = `${apiUrl}?${stringify(query, {encode:false})}`;
         return httpClient(url).then(({headers, json}) => ({
