@@ -14,31 +14,34 @@ const biosamplesDataProvider: DataProvider = {
         const {filter} = params;
 
         const query = {
-            filter:structuredClone(defaultFilter),
+            filter: structuredClone(defaultFilter),
             page,
             size: perPage
         };
-        if(filter) {
+        if (filter) {
             Object.entries(params.filter)
-                .map(([attr,value])=>`${attr}:${value}`)
-                .forEach(s=> query.filter.push(s));
+                .map(([attr, value]) => `${attr}:${value}`)
+                .forEach(s => query.filter.push(s));
         }
-        const url = `${apiUrl}?${stringify(query, {encode:false})}`;
-        return httpClient(url).then(({headers, json}) => ({
-            data: json._embedded[resource]
-                .map((record: any) => {
-                    return {...record,
+        const url = `${apiUrl}?${stringify(query, {encode: false})}`;
+        return httpClient(url).then(({headers, json}) => {
+            let data = json._embedded?.[resource] || [];
+            return ({
+                data: data.map((record: any) => {
+                    return {
+                        ...record,
                         id: record.accession,
                         // ...Object.entries(record.characteristics).map(x=>x[1][0].text)
                     };
                 }),
-            pageInfo: {
-                hasNextPage: Boolean(json._links.next),
-                hasPreviousPage: Boolean(json._links.previous)
-            },
-            total: json.page.totalElements
+                pageInfo: {
+                    hasNextPage: Boolean(json._links.next),
+                    hasPreviousPage: Boolean(json._links.previous)
+                },
+                total: json.page.totalElements
 
-        }));
+            });
+        });
     },
     getOne: (resource, params) =>
         httpClient(`${apiUrl}/${params.id}`).then(({json}) => ({

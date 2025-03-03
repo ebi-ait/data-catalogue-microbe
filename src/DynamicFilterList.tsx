@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import {FilterList, FilterListItem, Loading, useGetList} from "react-admin";
 
 interface DynamicFilterListProps {
@@ -32,14 +32,15 @@ export const DynamicFilterList = ({source, label, values}: DynamicFilterListProp
     const {facetValues, isPending, error} = useFacetValues(source, values);
 
     if (isPending) {
-        return <Loading loadingPrimary={`Loading ${source}`}/>;
+        return <Loading loadingSecondary={`Loading ${source}`}/>;
     }
     if (error) {
         console.error(`Error fetching values for column ${source} of facets: ${error.message}`);
         return <p>Could not load filter values for {source}</p>;
     }
     return (
-        <FilterList source={source} label={label || source}>
+        <FilterList source={source}
+                    label={label || source}>
             {facetValues.map(value => {
                 const filterItemValue = {[`attr:${source}`]: value};
                 return (
