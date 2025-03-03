@@ -14,7 +14,7 @@ const biosamplesDataProvider: DataProvider = {
         const {filter} = params;
 
         const query = {
-            filter: defaultFilter,
+            filter:structuredClone(defaultFilter),
             page,
             size: perPage
         };

@@ -34,11 +34,11 @@ const ListActions = () => (
 );
 export const SampleFilterSidebar = (props) => {
     return (
-        <Card>
+        <Card sx={{ order: -1, mr: 2, mt: 8, width: '25vw' }}>
             <CardContent>
                 <DynamicFilterList source={'organism'}/>
                 <DynamicFilterList source={'center'}/>
-                {/* TODO: freezing is hard coded becuase it is not available in the
+                {/* TODO: freezing is hard coded because it is not available in the
                           facets resource
                 */}
                 <DynamicFilterList source={'freezing method'}

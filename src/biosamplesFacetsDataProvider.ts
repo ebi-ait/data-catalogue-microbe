@@ -34,7 +34,6 @@ const biosamplesFacetsDataProvider: DataProvider = {
                     hasPreviousPage: false
                 },
                 total: attributes.length
-
             });
         });
     },
