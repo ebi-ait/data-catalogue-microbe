@@ -15,34 +15,77 @@ stages:
 
 build_docker_image:
   stage: build
-  image: docker:27
-  tags: ["dind"]
+  image:
+    name: ${CI_REGISTRY_IMAGE}/docker:27
+    pull_policy: if-not-present
+  tags: ["dind", "docker"]
   services:
-    - docker:27-dind
-  script:
-    - docker --version
+    - ${CI_REGISTRY_IMAGE}/docker:27-dind
+  before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login --username "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-    - docker build -t $DOCKER_IMAGE_NAME .
+  script:
+    - docker build --build-arg DOCKER_REGISTRY=${CI_REGISTRY_IMAGE} -t $DOCKER_IMAGE_NAME .
     - docker push --quiet $DOCKER_IMAGE_NAME
   after_script:
     - docker logout ${CI_REGISTRY}
 
-deploy_dev:
+deploy_int:
+  variables:
+    ENVIRONMENT_NAME: int
+  environment:
+    name: primary_hl_int
+    url: https://wwwint.ebi.ac.uk/microbe
+  when: manual
+  extends: .kube_deploy_script
+deploy_primary_dev:
   variables:
     ENVIRONMENT_NAME: dev
   environment:
-    name: dev
-    url: https://wwwint.ebi.ac.uk/microbe
+    name: primary_hl_dev
+    url: https://wwwdev.ebi.ac.uk/microbe
+  only:
+    - dev
+    - main
+  when: manual
+  extends: .kube_deploy_script
+deploy_fallback_dev:
+  variables:
+    ENVIRONMENT_NAME: dev
+  environment:
+    name: fallback_hx_dev
+    url: https://wwwdev.ebi.ac.uk/microbe
+  only:
+    - dev
+    - main
+  when: manual
+  extends: .kube_deploy_script
+deploy_primary_prod:
+  variables:
+    ENVIRONMENT_NAME: prod
+  environment:
+    name: primary_hl_prod
+    url: https://www.ebi.ac.uk/microbe
   only:
     - main
+  when: manual
   extends: .kube_deploy_script
 
+deploy_fallback_prod:
+  variables:
+    ENVIRONMENT_NAME: prod
+  environment:
+    name: fallback_hx_prod
+    url: https://www.ebi.ac.uk/microbe
+  only:
+    - main
+  when: manual
+  extends: .kube_deploy_script
 .kube_deploy_script:
   stage: deploy
-  image: dtzar/helm-kubectl:3.16
-  tags: ["dind"]
+  image: ${CI_REGISTRY_IMAGE}/dtzar/helm-kubectl:3.16
+  tags: ["dind", "docker"]
   services:
-    - docker:27-dind
+    - ${CI_REGISTRY_IMAGE}/docker:27-dind
   variables:
     K8S_NAMESPACE: ${K8S_NAMESPACE_PREFIX}-${ENVIRONMENT_NAME}
   script:
@@ -63,6 +106,5 @@ deploy_dev:
                    --set "imagePullSecrets[0].name=$DOCKER_PULL_SECRET"
     - kubectl rollout restart deployment ${APP_NAME}
     - kubectl rollout status deployment ${APP_NAME} --timeout=90s
-    - kubectl wait --for=condition=Ready deployment/${APP_NAME} --timeout=60s
 
 
