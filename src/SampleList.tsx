@@ -1,7 +1,19 @@
-import {Card, CardContent} from "@mui/material";
 import React from "react";
-import {Button, Datagrid, FilterButton, List, TextField, TopToolbar, useListContext, WrapperField} from "react-admin";
-import {DynamicFilterList} from "./DynamicFilterList";
+import {
+    Button,
+    DatagridConfigurable,
+    ExportButton,
+    FilterButton,
+    List,
+    SelectColumnsButton,
+    TextField,
+    TopToolbar,
+    UrlField,
+    useFieldValue,
+    useListContext,
+    WrapperField
+} from "react-admin";
+import {SamplesFilterSidebar} from "./SamplesFilterSidebar";
 
 const CharacteristicField = props => {
     const {source} = props;
@@ -22,58 +34,30 @@ const ClearFilterButton = () => {
     return <Button label="Clear Filters" onClick={clearFilters}/>;
 };
 const filters = [
-    // <SearchInput source="q" alwaysOn />,
 ];
 const ListActions = () => (
     <TopToolbar>
         <FilterButton/>
-        {/*<SelectColumnsButton />*/}
+        <SelectColumnsButton />
         <ClearFilterButton/>
-        {/*<ExportButton/>*/}
+        <ExportButton/>
     </TopToolbar>
 );
-export const SampleFilterSidebar = (props) => {
-    return (
-        <Card sx={{ order: -1, mr: 2, mt: 8, width: '25vw' }}>
-            <CardContent>
-                <DynamicFilterList source={'organism'}/>
-                <DynamicFilterList source={'center'}/>
-                {/* TODO: freezing is hard coded because it is not available in the
-                          facets resource
-                */}
-                <DynamicFilterList source={'freezing method'}
-                                   values={[
-                                       'Controlled Rate Freezer',
-                                       'Encapsulation',
-                                       'Liquid nitrogen',
-                                       'MrFrosty',
-                                       'Progressive freezer',
-                                       'Ultra Low Temperature Freezer',
-                                       'none',
-                                       'not provided'
-                                   ]}/>
-                <DynamicFilterList source={'targets'}
-                                   values={['-195.0',
-                                       '16S bact',
-                                       '16S bacteria',
-                                       '16S bact, 16S Archaea, IST',
-                                       'IST'
-                                   ]}
-                />
-                <DynamicFilterList source={'checklist'}
-                                   values={['ERC000020','ERC000024']}
-                />
-            </CardContent>
-        </Card>
-    )
+
+const SelfLinkField = (props) => {
+    const linkText = useFieldValue(props);
+    return <UrlField source={"_links.self.href"} content={linkText} target={'_new'}/>;
 };
+
 export const SampleList: React.FC = (props) => (
     <List {...props}
           actions={<ListActions/>}
-          aside={<SampleFilterSidebar/>}
+          aside={<SamplesFilterSidebar/>}
           filters={filters}
     >
-        <Datagrid rowClick="show">
+        <DatagridConfigurable rowClick="show">
+            <TextField source="name"/>
+            <SelfLinkField source="accession"/>
             <CharacteristicField source="center"/>
             <CharacteristicField source="time point"/>
             <CharacteristicField source="cryoprotectant"/>
@@ -81,7 +65,6 @@ export const SampleList: React.FC = (props) => (
             <CharacteristicField source="preservation temperature"/>
             <CharacteristicField source="targets"/>
             <CharacteristicField source="checklist"/>
-            <TextField source="accession"/>
-        </Datagrid>
+        </DatagridConfigurable>
     </List>
 );
