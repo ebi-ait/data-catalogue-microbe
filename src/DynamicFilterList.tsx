@@ -4,7 +4,7 @@ import {FilterList, FilterListItem, Loading, useGetList} from "react-admin";
 interface DynamicFilterListProps {
     source: string;
     label?: string; // Optional
-    values?: string[]; // Optional
+    defaultValues?: string[]; // Optional
 }
 
 interface Facet {
@@ -14,8 +14,7 @@ interface Facet {
     content: { label: string, count: number }[];
 }
 
-const useFacetValues = (source: string, values?: string[]) => {
-    if (values) return {facetValues: values, isPending: false, error: null};
+const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
 
     const {data, isPending, error} = useGetList<Facet>('facets', {});
     if (data) {
@@ -23,13 +22,16 @@ const useFacetValues = (source: string, values?: string[]) => {
             .filter(facet => facet.label === source)
             .flatMap(facet => facet.content)
             .map(content => content.label);
+        if(facetValues.length==0){
+            return {facetValues: defaultFacetValues, isPending: false, error: null}
+        }
         return {facetValues, isPending, error};
     }
     return {facetValues: [], isPending, error};
 };
 
-export const DynamicFilterList = ({source, label, values}: DynamicFilterListProps) => {
-    const {facetValues, isPending, error} = useFacetValues(source, values);
+export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterListProps) => {
+    const {facetValues, isPending, error} = useFacetValues(source, defaultValues);
 
     if (isPending) {
         return <Loading loadingSecondary={`Loading ${source}`}/>;
