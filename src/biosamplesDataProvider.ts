@@ -18,6 +18,9 @@ const biosamplesDataProvider: DataProvider = {
             page,
             size: perPage
         };
+        if(filter.q) {
+            query['text'] = filter.q;
+        }
         if (filter) {
             Object.entries(params.filter)
                 .map(([attr, value]) => `${attr}:${value}`)
