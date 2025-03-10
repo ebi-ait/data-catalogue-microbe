@@ -7,13 +7,15 @@ import {
     List,
     SelectColumnsButton,
     TextField,
-    TopToolbar,
     UrlField,
-    useFieldValue,
+    TopToolbar,
     useListContext,
     WrapperField
 } from "react-admin";
 import {SamplesFilterSidebar} from "./SamplesFilterSidebar";
+import {SelfLinkField} from "./SelfLinkField";
+// import {SamplesFilterSidebar} from "./SamplesFilterSidebar";
+
 
 const CharacteristicField = props => {
     const {source} = props;
@@ -44,22 +46,18 @@ const filters = [
 const ListActions = () => (
     <TopToolbar>
         <FilterButton/>
-        <SelectColumnsButton />
+        <SelectColumnsButton/>
         <ClearFilterButton/>
         <ExportButton/>
     </TopToolbar>
 );
-
-const SelfLinkField = (props) => {
-    const linkText = useFieldValue(props);
-    return <UrlField source={"_links.self.href"} content={linkText} target={'_new'}/>;
-};
 
 export const SampleList: React.FC = (props) => (
     <List {...props}
           actions={<ListActions/>}
           aside={<SamplesFilterSidebar/>}
           filters={filters}
+          emptyWhileLoading
     >
         <DatagridConfigurable rowClick="show">
             <TextField source="name"/>
