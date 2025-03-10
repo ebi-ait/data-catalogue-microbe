@@ -20,9 +20,10 @@ const biosamplesDataProvider: DataProvider = {
         };
         if(filter.q) {
             query['text'] = filter.q;
+            delete filter.q;
         }
         if (filter) {
-            Object.entries(params.filter)
+            Object.entries(filter)
                 .map(([attr, value]) => `${attr}:${value}`)
                 .forEach(s => query.filter.push(s));
         }

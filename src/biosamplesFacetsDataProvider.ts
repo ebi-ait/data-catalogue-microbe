@@ -12,6 +12,9 @@ const biosamplesFacetsDataProvider: DataProvider = {
         const query = {
             filter: defaultFilter,
         };
+        if(filter.q) {
+            query['text'] = filter.q;
+        }
         if(filter) {
             Object.entries(filter)
                 .map(([attr,value])=>`${attr}:${value}`)

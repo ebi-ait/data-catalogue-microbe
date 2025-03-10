@@ -7,7 +7,9 @@ export const SamplesFilterSidebar = (props) => {
     return (
         <Card sx={{order: -1, mr: 2, mt: 8, width: '25vw'}}>
             <CardContent>
-                <FilterLiveSearch source="q" label="Search" placeholder={"exact search phrase"}/>
+                <FilterLiveSearch source="q"
+                                  label="Search"
+                                  placeholder={"exact search phrase"}/>
                 <SavedQueriesList />
                 <DynamicFilterList source={'organism'}/>
                 <DynamicFilterList source={'center'}
