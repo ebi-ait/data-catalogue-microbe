@@ -25,13 +25,19 @@ const CharacteristicField = props => {
 };
 
 const ClearFilterButton = () => {
-    const {setFilters} = useListContext();
+    const {filterValues, setFilters} = useListContext();
+
+    // Check if any filter is applied
+    const hasFilters = Object.keys(filterValues).length > 0;
+
+    if (!hasFilters) return null;
 
     const clearFilters = () => {
         setFilters({}, {}); // Pass empty objects to clear all filters
     };
 
-    return <Button label="Clear Filters" onClick={clearFilters}/>;
+    return <Button label="Clear Filters"
+                   onClick={clearFilters}/>;
 };
 const filters = [
 ];
