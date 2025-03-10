@@ -36,7 +36,6 @@ export default defineConfig((config) => {
                             proxy.on('proxyReq', (proxyReq, req) => {
                                 console.log(`Proxying request to: ${proxyReq.getHeader('host')}${proxyReq.path}`);
                                 console.log(`Original URL: ${req.url}`);
-                                debugger;
                                 if (!proxyReq.getHeader('Content-Type')) {
                                     proxyReq.setHeader('Content-Type', 'application/json'); // Set default Content-Type
                                 }
