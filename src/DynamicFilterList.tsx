@@ -1,5 +1,7 @@
-import React, {useCallback} from "react";
-import {FilterList, FilterListItem, Loading, useGetList} from "react-admin";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {Accordion, AccordionDetails, AccordionSummary, Typography} from '@mui/material';
+import React, {useState} from "react";
+import {FilterList, FilterListItem, Loading, useGetList, useTranslate} from "react-admin";
 
 interface DynamicFilterListProps {
     source: string;
@@ -22,7 +24,7 @@ const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
             .filter(facet => facet.label === source)
             .flatMap(facet => facet.content)
             .map(content => content.label);
-        if(facetValues.length==0){
+        if (facetValues.length == 0) {
             return {facetValues: defaultFacetValues, isPending: false, error: null}
         }
         return {facetValues, isPending, error};
@@ -30,8 +32,11 @@ const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
     return {facetValues: [], isPending, error};
 };
 
+
 export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterListProps) => {
     const {facetValues, isPending, error} = useFacetValues(source, defaultValues);
+    const [expanded, setExpanded] = useState(true);
+    const translate = useTranslate();
 
     if (isPending) {
         return <Loading loadingSecondary={`Loading ${source}`}/>;
@@ -41,19 +46,27 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
         return <p>Could not load filter values for {source}</p>;
     }
     return (
-        <FilterList source={source}
-                    label={label || source}>
-            {facetValues.map(value => {
-                const filterItemValue = {[`attr:${source}`]: value};
-                return (
-                    <FilterListItem
-                        key={value}
-                        label={value}
-                        value={filterItemValue}
-                    />
-                );
-            })}
-        </FilterList>
+        <Accordion expanded={expanded}
+                   onChange={() => setExpanded(!expanded)}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                <Typography>{translate(label || source)}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <FilterList source={source}
+                            label="">
+                    {facetValues.map(value => {
+                        const filterItemValue = {[`attr:${source}`]: value};
+                        return (
+                            <FilterListItem
+                                key={value}
+                                label={translate(value)}
+                                value={filterItemValue}
+                            />
+                        );
+                    })}
+                </FilterList>
+            </AccordionDetails>
+        </Accordion>
     );
 };
 
