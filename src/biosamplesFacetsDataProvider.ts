@@ -14,6 +14,7 @@ const biosamplesFacetsDataProvider: DataProvider = {
         };
         if(filter.q) {
             query['text'] = filter.q;
+            delete filter.q;
         }
         if(filter) {
             Object.entries(filter)
