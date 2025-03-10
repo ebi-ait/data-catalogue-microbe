@@ -18,14 +18,13 @@ interface Facet {
 
 const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
 
-    const {data, isPending, error} = useGetList<Facet>('facets', {});
+    const {data, isPending, error} = useGetList<Facet>('facets');
     if (data) {
         const facetValues = data
             .filter(facet => facet.label === source)
-            .flatMap(facet => facet.content)
-            .map(content => content.label);
+            .flatMap(facet => facet.content);
         if (facetValues.length == 0) {
-            return {facetValues: defaultFacetValues, isPending: false, error: null}
+            return {facetValues: defaultFacetValues.map(v=>({label:v})), isPending: false, error: null}
         }
         return {facetValues, isPending, error};
     }
@@ -39,7 +38,7 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
     const translate = useTranslate();
 
     if (isPending) {
-        return <Loading loadingSecondary={`Loading ${source}`}/>;
+        return <Loading loadingPrimary={''} loadingSecondary={`Loading ${source}`}/>;
     }
     if (error) {
         console.error(`Error fetching values for column ${source} of facets: ${error.message}`);
@@ -55,11 +54,11 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
                 <FilterList source={source}
                             label="">
                     {facetValues.map(value => {
-                        const filterItemValue = {[`attr:${source}`]: value};
+                        const filterItemValue = {[`attr:${source}`]: value.label};
                         return (
                             <FilterListItem
-                                key={value}
-                                label={translate(value)}
+                                key={value.label}
+                                label={translate(value.label)}
                                 value={filterItemValue}
                             />
                         );

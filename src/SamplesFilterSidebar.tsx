@@ -13,7 +13,7 @@ export const SamplesFilterSidebar = (props) => {
                 <SavedQueriesList />
                 <DynamicFilterList source={'organism'}/>
                 <DynamicFilterList source={'time point'}
-                                   defaultValues={['T0', '1 (day)', '3 (day)', '91 (day)', '182 (day)', '266 (day)']}/>
+                                   defaultValues={['T0', '0 (day)', '1 (day)', '3 (day)', '91 (day)', '182 (day)', '266 (day)']}/>
                 <DynamicFilterList source={'center'}
                                    defaultValues={['AIT', 'CABI', 'INRAE', 'Station Biologique de Roscoff']}/>
 
