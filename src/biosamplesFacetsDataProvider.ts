@@ -16,6 +16,10 @@ const biosamplesFacetsDataProvider: DataProvider = {
             query['text'] = filter.q;
             delete filter.q;
         }
+        if(filter.facet) {
+            query['facet'] = filter.facet;
+            delete filter.facet;
+        }
         if(filter) {
             Object.entries(filter)
                 .map(([attr,value])=>`${attr}:${value}`)

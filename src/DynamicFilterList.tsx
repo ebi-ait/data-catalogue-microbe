@@ -18,13 +18,15 @@ interface Facet {
 
 const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
 
-    const {data, isPending, error} = useGetList<Facet>('facets');
+    const {data, isPending, error} = useGetList<Facet>('facets', {
+        filter: {facet: source}
+    });
     if (data) {
         const facetValues = data
             .filter(facet => facet.label === source)
             .flatMap(facet => facet.content);
         if (facetValues.length == 0) {
-            return {facetValues: defaultFacetValues.map(v=>({label:v})), isPending: false, error: null}
+            return {facetValues: defaultFacetValues.map(v => ({label: v})), isPending: false, error: null}
         }
         return {facetValues, isPending, error};
     }
@@ -53,16 +55,17 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
             <AccordionDetails>
                 <FilterList source={source}
                             label="">
-                    {facetValues.map(value => {
-                        const filterItemValue = {[`attr:${source}`]: value.label};
-                        return (
-                            <FilterListItem
-                                key={value.label}
-                                label={translate(value.label)}
-                                value={filterItemValue}
-                            />
-                        );
-                    })}
+                    {facetValues.sort((a,b)=>a.label.localeCompare(b.label))
+                        .map(value => {
+                            const filterItemValue = {[`attr:${source}`]: value.label};
+                            return (
+                                <FilterListItem
+                                    key={value.label}
+                                    label={translate(value.label)}
+                                    value={filterItemValue}
+                                />
+                            );
+                        })}
                 </FilterList>
             </AccordionDetails>
         </Accordion>
