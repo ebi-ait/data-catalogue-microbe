@@ -1,6 +1,6 @@
 import {Card, CardContent} from "@mui/material";
 import React from "react";
-import {FilterLiveSearch, SavedQueriesList} from "react-admin";
+import {SavedQueriesList} from "react-admin";
 import {DynamicFilterList} from "./DynamicFilterList";
 
 export const SamplesFilterSidebar = (props) => {

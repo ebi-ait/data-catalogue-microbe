@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {Accordion, AccordionDetails, AccordionSummary, Typography} from '@mui/material';
+import {Accordion, AccordionDetails, AccordionSummary, Typography, Filt} from '@mui/material';
 import React, {useState} from "react";
 import {FilterList, FilterListItem, Loading, useGetList, useTranslate} from "react-admin";
 
@@ -54,7 +54,7 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
             </AccordionSummary>
             <AccordionDetails>
                 <FilterList source={source}
-                            label="">
+                            label="" icon="">
                     {facetValues.sort((a,b)=>a.label.localeCompare(b.label))
                         .map(value => {
                             const filterItemValue = {[`attr:${source}`]: value.label};
