@@ -7,13 +7,14 @@ export const SamplesFilterSidebar = (props) => {
     return (
         <Card sx={{order: -1, mr: 2, mt: 8, width: '25vw'}}>
             <CardContent>
-                <FilterLiveSearch source="q"
-                                  label="Search"
-                                  placeholder={"exact search phrase"}/>
                 <SavedQueriesList />
                 <DynamicFilterList source={'organism'}/>
                 <DynamicFilterList source={'time point'}
-                                   defaultValues={['T0', '0 (day)', '1 (day)', '3 (day)', '91 (day)', '182 (day)', '266 (day)']}/>
+                                   defaultValues={['T0',
+                                       '0 (day)', '1 (day)', '3 (day)', '7 (day)', '91 (day)', '182 (day)', '266 (day)',
+                                       '6 (month)', '12 (month)'
+
+                                   ]}/>
                 <DynamicFilterList source={'center'}
                                    defaultValues={['AIT', 'CABI', 'INRAE', 'Station Biologique de Roscoff']}/>
 
