@@ -51,22 +51,36 @@ export const themes: Theme[] = [
         light: {
             ...defaultLightTheme,
             palette: {
+                primary: {
+                    // light: '#6ec6ff',
+                    main: '#92c3de',
+                    // dark: '#0069c0',
+                    contrastText: '#fff',
+                },
                 secondary: {
                     // light: '#6ec6ff',
                     main: '#5488c7',
                     // dark: '#0069c0',
                     contrastText: '#fff',
                 },
-                primary: {
-                    // light: '#6ec6ff',
-                    main: '#92c3de',
-                    // dark: '#0069c0',
-                    contrastText: '#fff',
-                }
             },
             components: {
                 ...defaultLightTheme.components,
                 RaSidebar: BW_SIDEBAR_OVERRIDE,
+                MuiSvgIcon: {
+                    styleOverrides: {
+                        root: {
+                            color: "#265aa6", // Change default icon color
+                        },
+                    },
+                },
+                RaButton: {
+                    styleOverrides: {
+                        root: {
+                            color: "#265aa6", // Change default icon color
+                        },
+                    },
+                }
             },
         },
         dark: {

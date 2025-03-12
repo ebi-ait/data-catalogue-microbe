@@ -7,9 +7,12 @@ export const SelfLinkField = (props) => {
     const linkHref = useFieldValue({...props, source: '_links.self.href'});
     const linkText = useFieldValue(props);
 
-    return <Link href={linkHref} sx={{textDecoration: "none"}} target={'_new'}>
+    return <Link href={linkHref}
+                 sx={{textDecoration: "none"}}
+                 color={'secondary'}
+                 target={'_new'}>
         {linkText}
-        <LaunchIcon sx={{fontSize: 15, ml: 1}}/>
+        <LaunchIcon sx={{fontSize: '1rem', ml: 1}}/>
     </Link>
     ;
 };
