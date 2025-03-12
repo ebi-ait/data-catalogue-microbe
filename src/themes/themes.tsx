@@ -51,16 +51,15 @@ export const themes: Theme[] = [
         light: {
             ...defaultLightTheme,
             palette: {
+                text: {
+                    primary: '#00508C'
+                },
                 primary: {
-                    // light: '#6ec6ff',
                     main: '#92c3de',
-                    // dark: '#0069c0',
-                    contrastText: '#fff',
+                    contrastText: '#354982',
                 },
                 secondary: {
-                    // light: '#6ec6ff',
                     main: '#5488c7',
-                    // dark: '#0069c0',
                     contrastText: '#fff',
                 },
             },
