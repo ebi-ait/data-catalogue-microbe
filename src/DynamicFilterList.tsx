@@ -40,7 +40,8 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
     const translate = useTranslate();
 
     if (isPending) {
-        return <Loading loadingPrimary={''} loadingSecondary={`Loading ${source}`}/>;
+        return <Loading loadingSecondary={`Loading ${source}`}
+                        loadingPrimary={''}/>;
     }
     if (error) {
         console.error(`Error fetching values for column ${source} of facets: ${error.message}`);
@@ -52,7 +53,19 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <Typography>{translate(label || source)}</Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{
+                maxHeight: "200px", // Limit height
+                overflowY: "auto",  // Enable scrolling if content exceeds max height
+                padding: "8px",
+                "&::-webkit-scrollbar": {
+                    width: "8px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                    backgroundColor: "#bbb",
+                    borderRadius: "4px",
+                },
+
+            }}>
                 <FilterList source={source}
                             label="" icon="">
                     {facetValues.sort((a,b)=>a.label.localeCompare(b.label))
