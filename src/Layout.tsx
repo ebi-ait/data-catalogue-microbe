@@ -1,7 +1,7 @@
 import {Biotech, ScatterPlot, Terrain, Tsunami} from "@mui/icons-material";
 import {stringify} from "query-string";
 import React from "react";
-import {AppBar, Layout, Menu, Sidebar, TitlePortal} from "react-admin";
+import {AppBar, Layout, Menu, MenuItemLink, Sidebar, TitlePortal} from "react-admin";
 
 export const MyLayout = ({children}) => (
     <Layout appBar={MyAppBar}
@@ -27,7 +27,7 @@ export const MyAppBar = () => (
     </AppBar>
 );
 const FilteredResourceLink = (props: { resource, filter, icon, primaryText }) => {
-    return <Menu.Item
+    return <MenuItemLink
         to={{
             pathname: '/' + props.resource,
             search: stringify({
@@ -51,16 +51,16 @@ export const MyMenu = () => {
             <Menu.Item to="/samples" primaryText="Samples" leftIcon={<Biotech/>}/>
             <FieldFilterLink resource="samples"
                              field={`attr:organism`}
-                              value={'marine metagenome'}
-                              icon={<Tsunami/>}/>
+                             value={'marine metagenome'}
+                             icon={<Tsunami/>}/>
             <FieldFilterLink resource="samples"
-                                  field={`attr:organism`}
-                                  value={'seed metagenome'}
-                                  icon={<ScatterPlot/>}/>
+                             field={`attr:organism`}
+                             value={'seed metagenome'}
+                             icon={<ScatterPlot/>}/>
             <FieldFilterLink resource="samples"
-                                  field={`attr:organism`}
-                                  value={'soil metagenome'}
-                                  icon={<Terrain/>}/>
+                             field={`attr:organism`}
+                             value={'soil metagenome'}
+                             icon={<Terrain/>}/>
         </Menu>
     );
 };
