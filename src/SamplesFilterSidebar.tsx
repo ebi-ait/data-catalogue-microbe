@@ -1,6 +1,7 @@
 import {Card, CardContent} from "@mui/material";
 import React from "react";
 import {SavedQueriesList} from "react-admin";
+import {ClearFilterButton} from "./ClearFilterButton";
 import {DynamicFilterList} from "./DynamicFilterList";
 
 export const SamplesFilterSidebar = (props) => {
@@ -8,6 +9,7 @@ export const SamplesFilterSidebar = (props) => {
         <Card sx={{order: -1, mr: 2, mt: 8, width: '25vw'}}>
             <CardContent>
                 <SavedQueriesList />
+                <ClearFilterButton/>
                 <DynamicFilterList source={'organism'}/>
                 <DynamicFilterList source={'time point'}
                                    defaultValues={['T0',
