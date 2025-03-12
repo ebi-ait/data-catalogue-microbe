@@ -21,7 +21,7 @@ export const MyAppBar = () => (
             <img
                 alt={'Microbe Logo'}
                 title={'Microbe Logo'}
-                height={80}
+                height={70}
                 src={logo}
             />
         </Box>
