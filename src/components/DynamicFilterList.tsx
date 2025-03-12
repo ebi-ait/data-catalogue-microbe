@@ -36,7 +36,7 @@ const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
 
 export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterListProps) => {
     const {facetValues, isPending, error} = useFacetValues(source, defaultValues);
-    const [expanded, setExpanded] = useState(true);
+    const [expanded, setExpanded] = useState(false);
     const translate = useTranslate();
 
     if (isPending) {
@@ -53,6 +53,7 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <Typography>{translate(label || source)}</Typography>
             </AccordionSummary>
+            {/*TODO: move to a css file */}
             <AccordionDetails sx={{
                 maxHeight: "200px", // Limit height
                 overflowY: "auto",  // Enable scrolling if content exceeds max height
