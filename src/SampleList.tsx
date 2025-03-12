@@ -15,11 +15,13 @@ import {SelfLinkField} from "./SelfLinkField";
 
 
 const CharacteristicField = props => {
-    const {source} = props;
-    return <WrapperField>
-        <TextField source={`characteristics.${source}[0].text`}/>
+    const {source, label, ...rest} = props;
+    return <WrapperField label={label}>
+        <TextField source={`characteristics.${source}[0].text`}
+                   label={label}
+                   {...rest}/>
         &nbsp;
-        <TextField source={`characteristics.${source}[0].unit`}/>
+        <TextField source={`characteristics.${source}[0].unit`} {...rest}/>
     </WrapperField>
 };
 
@@ -42,11 +44,22 @@ export const SampleList: React.FC = (props) => (
           emptyWhileLoading
     >
         <DatagridConfigurable rowClick="show"
-                              omit={['name', 'description', 'collection date']}>
+                              omit={[
+                                  'checklist',
+                                  'collection date',
+                                  'description',
+                                  'environmental medium',
+                                  'name',
+                                  'organism',
+                                  'SRA accession',
+                              ]}>
             <TextField source="name"/>
             <SelfLinkField source="accession"/>
+            <CharacteristicField source="SRA accession" label="SRA Accession"/>
             <CharacteristicField source="center"/>
             <CharacteristicField source="description"/>
+            <CharacteristicField source="organism"/>
+            <CharacteristicField source="environmental medium"/>
             <CharacteristicField source="time point"/>
             <CharacteristicField source="cryoprotectant"/>
             <CharacteristicField source="freezing method"/>
