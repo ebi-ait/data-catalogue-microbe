@@ -9,9 +9,9 @@ import {
     TopToolbar,
     WrapperField
 } from "react-admin";
-import {ClearFilterButton} from "./ClearFilterButton";
-import {SamplesFilterSidebar} from "./SamplesFilterSidebar";
-import {SelfLinkField} from "./SelfLinkField";
+import {ClearFilterButton} from "./components/ClearFilterButton";
+import {SamplesFilterSidebar} from "./components/SamplesFilterSidebar";
+import {SelfLinkField} from "./components/SelfLinkField";
 
 
 const CharacteristicField = props => {
