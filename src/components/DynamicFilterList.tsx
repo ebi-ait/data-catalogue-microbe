@@ -1,5 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {Accordion, AccordionDetails, AccordionSummary, Typography, Filt} from '@mui/material';
+import {Accordion, AccordionDetails, AccordionSummary, Typography, Chip, Stack} from '@mui/material';
+import {useListFilterContext} from "ra-core";
 import React, {useState} from "react";
 import {FilterList, FilterListItem, Loading, useGetList, useTranslate} from "react-admin";
 
@@ -39,6 +40,8 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
     const [expanded, setExpanded] = useState(false);
     const translate = useTranslate();
 
+    const { filterValues } = useListFilterContext();
+
     if (isPending) {
         return <Loading loadingSecondary={`Loading ${source}`}
                         loadingPrimary={''}/>;
@@ -51,7 +54,10 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
         <Accordion expanded={expanded}
                    onChange={() => setExpanded(!expanded)}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                <Typography>{translate(label || source)}</Typography>
+                <Stack>
+                    <Typography component="span">{translate(label || source)}</Typography>
+                    {filterValues.hasOwnProperty('attr:'+source)?<Chip label={filterValues['attr:'+source]}/>:''}
+                </Stack>
             </AccordionSummary>
             {/*TODO: move to a css file */}
             <AccordionDetails sx={{
@@ -69,7 +75,7 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
             }}>
                 <FilterList source={source}
                             label="" icon="">
-                    {facetValues.sort((a,b)=>a.label.localeCompare(b.label))
+                    {facetValues.sort((a, b) => a.label.localeCompare(b.label))
                         .map(value => {
                             const filterItemValue = {[`attr:${source}`]: value.label};
                             return (
