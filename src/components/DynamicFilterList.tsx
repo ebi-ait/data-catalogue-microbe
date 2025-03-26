@@ -18,9 +18,13 @@ interface Facet {
 }
 
 const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
+    const { filterValues } = useListFilterContext();
 
     const {data, isPending, error} = useGetList<Facet>('facets', {
-        filter: {facet: source}
+        filter: {
+            facet: source,
+            ...filterValues
+        }
     });
     if (data) {
         const facetValues = data

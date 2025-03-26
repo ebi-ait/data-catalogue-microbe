@@ -24,11 +24,11 @@ export const SamplesFilterSidebar = (props) => {
                                    defaultValues={['T0',
                                        '0 (day)', '1 (day)', '3 (day)', '7 (day)', '91 (day)', '182 (day)', '266 (day)',
                                        '6 (month)', '12 (month)'
-
-                                   ]}/>
+                                   ]}
+                />
                 <DynamicFilterList source={'center'}
-                                   defaultValues={['AIT', 'CABI', 'INRAE', 'Station Biologique de Roscoff']}/>
-
+                                   defaultValues={['AIT', 'CABI', 'INRAE', 'Station Biologique de Roscoff']}
+                />
                 <DynamicFilterList source={'freezing method'}
                                    defaultValues={[
                                        'Controlled Rate Freezer',
