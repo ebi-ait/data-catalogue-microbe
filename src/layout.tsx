@@ -40,10 +40,10 @@ const FilteredResourceLink = (props: { resource, filter, icon, primaryText }) =>
         leftIcon={props.icon}
     />;
 };
-const FieldFilterLink = (props:{resource, field, value, icon}) => {
+const FieldFilterLink = (props:{resource, field, value, icon, title}) => {
     return <FilteredResourceLink resource={props.resource}
                                  filter={{[props.field]: props.value}}
-                                 primaryText={props.value}
+                                 primaryText={props.title ?? props.value}
                                  icon={props.icon}/>
 };
 export const MyMenu = () => {
@@ -54,14 +54,17 @@ export const MyMenu = () => {
             <FieldFilterLink resource="samples"
                              field={`attr:organism`}
                              value={'marine metagenome'}
+                             title={'Marine Samples'}
                              icon={<Tsunami/>}/>
             <FieldFilterLink resource="samples"
                              field={`attr:organism`}
                              value={'seed metagenome'}
+                             title={'Seed Samples'}
                              icon={<ScatterPlot/>}/>
             <FieldFilterLink resource="samples"
                              field={`attr:organism`}
                              value={'soil metagenome'}
+                             title={'Soil Samples'}
                              icon={<Terrain/>}/>
         </Menu>
     );
