@@ -1,12 +1,13 @@
+import {useFieldValue} from "ra-core";
 import React from "react";
 import {
     DatagridConfigurable,
     ExportButton,
     FilterButton,
     List,
-    SelectColumnsButton,
+    SelectColumnsButton, SelectField,
     TextField,
-    TopToolbar,
+    TopToolbar, useRecordContext,
     WrapperField
 } from "react-admin";
 import {ClearFilterButton} from "./components/ClearFilterButton";
@@ -35,6 +36,13 @@ const ListActions = () => (
         <ExportButton/>
     </TopToolbar>
 );
+
+const DataAvailability = props => {
+    const value = useFieldValue(props);
+    return value ? (
+        'Raw Sequence Data Available'
+    ) : 'Private/not sequenced yet';
+};
 
 export const SampleList: React.FC = (props) => (
     <List {...props}
@@ -67,6 +75,8 @@ export const SampleList: React.FC = (props) => (
             <CharacteristicField source="targets"/>
             <CharacteristicField source="checklist"/>
             <CharacteristicField source="collection date"/>
+            <DataAvailability source='externalReferences[0].url'
+                              label='Data Status'/>
         </DatagridConfigurable>
     </List>
 );

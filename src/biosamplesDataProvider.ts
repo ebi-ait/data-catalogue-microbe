@@ -15,7 +15,7 @@ const biosamplesDataProvider: DataProvider = {
 
         const query = {
             filter: structuredClone(defaultFilter),
-            page,
+            page:page-1, // spring boot is zero pased, react-admin os 1 based
             size: perPage
         };
         if(filter.q) {
