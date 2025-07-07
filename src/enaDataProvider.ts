@@ -1,5 +1,5 @@
 import {stringify} from 'query-string';
-import {DataProvider, fetchUtils, GetOneParams} from 'react-admin';
+import {DataProvider, fetchUtils, GetOneParams, HttpError} from 'react-admin';
 import {microbeEnaFilter} from "./constants";
 
 // TODO: read /microbe from config.js
@@ -54,7 +54,7 @@ class EnaDataProvider implements DataProvider {
             .then(({json}) => {
                 const data = json || [];
                 if (!Array.isArray(data) || data.length === 0) {
-                    return {data:{}}
+                    return Promise.reject( new HttpError(`Sample with accession ${params.id} not found`, 404));
                 }
                 const record = data[0];
                 return {
