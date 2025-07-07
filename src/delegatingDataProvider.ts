@@ -1,5 +1,6 @@
 import biosamplesDataProvider from "./biosamplesDataProvider";
 import biosamplesFacetsDataProvider from "./biosamplesFacetsDataProvider";
+import enaDataProvider from "./enaDataProvider";
 
 const delegatingDataProvider = (resource) => {
     switch (resource) {
@@ -7,6 +8,8 @@ const delegatingDataProvider = (resource) => {
             return biosamplesDataProvider;
         case 'facets':
             return biosamplesFacetsDataProvider;
+        case 'ena':
+            return enaDataProvider;
         default:
             throw new Error(`No data provider found for resource: ${resource}`);
     }

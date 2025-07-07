@@ -4,6 +4,7 @@
 
 # app specific configuration goes here
 biosamplesUrl: https://www.ebi.ac.uk/biosamples/
+enaUrl: https://www.ebi.ac.uk/ena/
 baseUrl: /microbe
 apiPrefix: /api
 

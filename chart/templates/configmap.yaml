@@ -13,12 +13,17 @@ data:
       access_log /var/log/nginx/access.log main;
       error_log /var/log/nginx/access.log debug;
 
-      # redirect /api requests to the biosamples
+      # redirect /api/biosamples requests to the biosamples
       location {{.Values.baseUrl}}{{.Values.apiPrefix}}/biosamples {
           rewrite ^{{.Values.baseUrl}}{{.Values.apiPrefix}}/(.*)$ /$1 break;
           proxy_pass "{{ .Values.biosamplesUrl}}";
       }
 
+      # redirect /api/ena requests to the ena
+      location {{.Values.baseUrl}}{{.Values.apiPrefix}}/ena {
+          rewrite ^{{.Values.baseUrl}}{{.Values.apiPrefix}}/(.*)$ /$1 break;
+          proxy_pass "{{ .Values.enaUrl}}";
+      }
       location {{.Values.baseUrl}} {
         alias   /usr/share/nginx/html;
         index  index.html;
