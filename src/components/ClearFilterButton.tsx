@@ -16,5 +16,5 @@ export const ClearFilterButton = () => {
 
     return <Button label="Clear Filters"
                    onClick={clearFilters}
-    startIcon={<FilterAltOff/>}/>;
+                   startIcon={<FilterAltOff/>}/>;
 };

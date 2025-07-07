@@ -17,7 +17,7 @@ export const DataAvailability = (props: any) => {
     }, [dataProvider, record?.accession]);
 
     if (value) {
-        return <>Raw Sequence Data Available</>;
+        return <>Public</>;
     } else if (datahubRecord) {
         return <>Private</>;
     } else {
