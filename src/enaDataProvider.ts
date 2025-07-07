@@ -54,7 +54,7 @@ class EnaDataProvider implements DataProvider {
             .then(({json}) => {
                 const data = json || [];
                 if (!Array.isArray(data) || data.length === 0) {
-                    throw new Error(`Sample with accession ${params.id} not found`);
+                    return {data:{}}
                 }
                 const record = data[0];
                 return {
@@ -77,9 +77,6 @@ class EnaDataProvider implements DataProvider {
     delete = this.notImplemented;
     deleteMany = this.notImplemented;
 
-    private notImplemented = () => {
-        return Promise.reject('Not implemented');
-    };
 }
 
 const enaDataProvider = new EnaDataProvider(apiUrl, httpClient, microbeEnaFilter);
