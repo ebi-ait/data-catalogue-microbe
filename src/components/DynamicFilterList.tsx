@@ -12,14 +12,25 @@ interface DynamicFilterListProps {
     defaultValues?: string[]; // Optional
 }
 
+interface FacetLabelCount {
+    label: string;
+    count?: number;
+}
+
 interface Facet {
     label: string;
     type: string;
     count: number;
-    content: { label: string, count: number }[];
+    content: FacetLabelCount[];
 }
 
-const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
+interface UseFacetValuesValue {
+    facetValues: FacetLabelCount[];
+    isPending: boolean;
+    error?: Error|null;
+}
+
+const useFacetValues= (source: string, defaultFacetValues?: string[]) : UseFacetValuesValue  => {
     const { filterValues } = useListFilterContext();
 
     const {data, isPending, error} = useGetList<Facet>('facets', {
@@ -28,12 +39,18 @@ const useFacetValues = (source: string, defaultFacetValues?: string[]) => {
             ...filterValues
         }
     });
+
+    const extracted: (v: string) => FacetLabelCount = (v: string): FacetLabelCount => ({label: v});
+
     if (data) {
-        const facetValues = data
+        const facetValues: FacetLabelCount[] = data
             .filter(facet => facet.label === source)
             .flatMap(facet => facet.content);
         if (facetValues.length == 0) {
-            return {facetValues: defaultFacetValues.map(v => ({label: v})), isPending: false, error: null}
+            return {
+                facetValues: defaultFacetValues?.map(extracted),
+                isPending: false
+            }
         }
         return {facetValues, isPending, error};
     }
@@ -78,26 +95,31 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
         console.error(`Error fetching values for column ${source} of facets: ${error.message}`);
         return <p>Could not load filter values for {source}</p>;
     }
+
+    function shouldShowSelectedValues() {
+        return (filterValues.hasOwnProperty('attr:' + source) && !expanded);
+    }
+
     return (
         <Accordion expanded={expanded}
                    onChange={() => setExpanded(!expanded)}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <Stack>
                     <Typography component="span">{translate(label || source)}</Typography>
-                    {(filterValues.hasOwnProperty('attr:'+source) && !expanded)
-                        ?<Chip label={filterValues['attr:'+source]}
-                               onDelete={event => {
-                                   event.stopPropagation();
-                                   handleDeleteFilter(filterValues['attr:'+source]);
-                               }}
-                                deleteIcon={ <CancelIcon />}/>
-                        :''}
+                    {shouldShowSelectedValues()
+                    ?<Chip label={filterValues['attr:' + source]}
+                           onDelete={event => {
+                               event.stopPropagation();
+                               handleDeleteFilter(filterValues['attr:' + source]);
+                           }}
+                           deleteIcon={<CancelIcon/>}/>
+                    :''}
                 </Stack>
             </AccordionSummary>
             {/*TODO: move to a css file */}
             <AccordionDetails sx={{
                 maxHeight: "200px", // Limit height
-                overflowY: "auto",  // Enable scrolling if content exceeds max height
+                overflowY: "scroll",  // Enable scrolling if content exceeds max height
                 padding: "8px",
                 "&::-webkit-scrollbar": {
                     width: "8px",
@@ -111,7 +133,7 @@ export const DynamicFilterList = ({source, label, defaultValues}: DynamicFilterL
                 <FilterList source={source}
                             label="" icon="">
                     {facetValues
-                        .sort((a, b) => a.label.localeCompare(b.label))
+                        ?.sort((a, b) => a.label.localeCompare(b.label))
                         .map(value => {
                             const filterItemValue = {[`attr:${source}`]: value.label};
                             return (

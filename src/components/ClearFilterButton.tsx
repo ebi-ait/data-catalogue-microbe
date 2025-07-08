@@ -3,7 +3,7 @@ import {Button, useListContext} from "react-admin";
 import {FilterAltOff} from "@mui/icons-material";
 
 export const ClearFilterButton = () => {
-    const {filterValues, setFilters} = useListContext();
+    const {filterValues, setFilters, resource} = useListContext();
 
     // Check if any filter is applied
     const hasFilters = Object.keys(filterValues).length > 0;

@@ -20,38 +20,11 @@ export const SamplesFilterSidebar = (props) => {
                 <SavedQueriesList />
                 <ClearFilterButton/>
                 <DynamicFilterList source={'organism'}/>
-                <DynamicFilterList source={'time point'}
-                                   defaultValues={['T0',
-                                       '0 (day)', '1 (day)', '3 (day)', '7 (day)', '91 (day)', '182 (day)', '266 (day)',
-                                       '6 (month)', '12 (month)'
-                                   ]}
-                />
-                <DynamicFilterList source={'center'}
-                                   defaultValues={['AIT', 'CABI', 'INRAE', 'Station Biologique de Roscoff']}
-                />
-                <DynamicFilterList source={'freezing method'}
-                                   defaultValues={[
-                                       'Controlled Rate Freezer',
-                                       'Encapsulation',
-                                       'Liquid nitrogen',
-                                       'MrFrosty',
-                                       'Progressive freezer',
-                                       'Ultra Low Temperature Freezer',
-                                       'none',
-                                       'not provided'
-                                   ]}/>
-                <DynamicFilterList source={'targets'}
-                                   defaultValues={[
-                                       '-195.0',
-                                       '16S bact',
-                                       '16S bacteria',
-                                       '16S bact, 16S Archaea, IST',
-                                       'IST'
-                                   ]}
-                />
-                <DynamicFilterList source={'checklist'}
-                                   defaultValues={['ERC000020', 'ERC000022', 'ERC000024']}
-                />
+                <DynamicFilterList source={'time point'}/>
+                <DynamicFilterList source={'center'}/>
+                <DynamicFilterList source={'freezing method'}/>
+                <DynamicFilterList source={'targets'}/>
+                <DynamicFilterList source={'checklist'}/>
             </CardContent>
         </Card>
     )

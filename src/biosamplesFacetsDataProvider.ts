@@ -10,7 +10,7 @@ const biosamplesFacetsDataProvider: DataProvider = {
     getList: (resource, params) => {
         const {filter} = params;
         const query = {
-            filter: defaultFilter,
+            filter: structuredClone(defaultFilter),
         };
         if(filter.q) {
             query['text'] = filter.q;
